@@ -1,10 +1,12 @@
 /** NODE_MODULES */
 import express, {json, urlencoded} from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 
 /** APP */
 const app = express();
 app.use(cors());
+app.use(helmet());
 app.use(json());
 app.use(urlencoded({extended: true}));
 
