@@ -4,11 +4,6 @@ import ndjson from 'ndjson';
 import {Router} from 'express';
 const router = Router();
 
-router.get('/createDB', (_req, res) => {
-  const result = queries.createDB();
-  result === true ? res.send({status: 200}) : res.send({status: 500});
-});
-
 router.get('/games', async function (req, res) {
   const username = req.query.username.toLowerCase();
   const {max, token} = req.query;
