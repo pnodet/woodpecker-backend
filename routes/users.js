@@ -12,4 +12,4 @@ router.post('/', async (req, res) => {
   user = new User();
 });
 
-export default router;
+module.exports = router;

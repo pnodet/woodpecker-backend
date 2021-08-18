@@ -1,9 +1,9 @@
-import mongo from 'mongodb';
-import config from '../config.js';
+const mongo = require('mongodb');
+const config = require('../config.js');
 
 const url = config.db.url;
 
-export const createDB = async () => {
+const createDB = async () => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -19,7 +19,7 @@ export const createDB = async () => {
   return true;
 };
 
-export const createCollection = async collec => {
+ const createCollection = async collec => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -37,7 +37,7 @@ export const createCollection = async collec => {
   return true;
 };
 
-export const insertOne = async (doc, collec) => {
+ const insertOne = async (doc, collec) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -57,7 +57,7 @@ export const insertOne = async (doc, collec) => {
   }
 };
 
-export const insertMany = async (arr, collec) => {
+ const insertMany = async (arr, collec) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -77,7 +77,7 @@ export const insertMany = async (arr, collec) => {
   }
 };
 
-export const findOne = async (itemQuery, collec, options = {}) => {
+ const findOne = async (itemQuery, collec, options = {}) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -95,7 +95,7 @@ export const findOne = async (itemQuery, collec, options = {}) => {
   }
 };
 
-export const find = async (itemQuery, collec, options = {}) => {
+ const find = async (itemQuery, collec, options = {}) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -117,7 +117,7 @@ export const find = async (itemQuery, collec, options = {}) => {
   }
 };
 
-export const empty = async () => {
+ const empty = async () => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -130,3 +130,5 @@ export const empty = async () => {
     await client.close();
   }
 };
+
+module.exports = {createDB, createCollection, insertOne, insertMany, findOne, find, empty};

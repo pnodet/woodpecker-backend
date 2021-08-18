@@ -1,4 +1,4 @@
-import {Router} from 'express';
+const {Router} = require('express');
 const router = Router();
 
 router.get('/', async (_req, res) => {
@@ -22,4 +22,4 @@ router.get('/createDB', (_req, res) => {
   result === true ? res.send({status: 200}) : res.send({status: 500});
 });
 
-export default router;
+module.exports = router;

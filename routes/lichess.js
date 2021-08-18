@@ -1,7 +1,7 @@
-import * as queries from '../controllers/dbController.js';
-import fetch from 'node-fetch';
-import ndjson from 'ndjson';
-import {Router} from 'express';
+const queries = require('../controllers/dbController.js');
+const fetch = require('node-fetch');
+const ndjson = require('ndjson');
+const {Router} = require('express');
 const router = Router();
 
 router.get('/games', async function (req, res) {
@@ -22,6 +22,7 @@ router.get('/games', async function (req, res) {
   const response = await fetch(url, {
     headers: {Accept: 'application/x-ndjson'},
   });
+
   response.body
     .pipe(ndjson.parse())
     .on('data', async item => {
@@ -58,4 +59,4 @@ router.get('/games', async function (req, res) {
     });
 });
 
-export default router;
+module.exports = router;

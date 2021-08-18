@@ -1,5 +1,5 @@
-import {Router} from 'express';
-import * as queries from '../controllers/dbController.js';
+const {Router} = require('express');
+const queries = require('../controllers/dbController.js');
 
 const router = Router();
 
@@ -27,4 +27,4 @@ router.put('/set', async (_req, _res) => {});
 router.get('/set:UserId', async (_req, _res) => {});
 
 
-export default router;
+module.exports = router;
