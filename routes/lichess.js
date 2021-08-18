@@ -6,15 +6,18 @@ const router = Router();
 
 router.get('/games', async function (req, res) {
   const username = req.query.username.toLowerCase();
-  const {max, token} = req.query;
-  const url =
-    'https://lichess.org/api/games/user/' +
-    username +
-    '?max=' +
-    max +
-    '&token=' +
-    token +
-    '&rated=true&perfType=blitz,rapid,classical&pgnInJson=true';
+  const {
+    max = '100',
+    token,
+    rated = 'true',
+    perfType = 'blitz,rapid,classical',
+  } = req.query;
+
+  let url = ` https://lichess.org/api/games/user/${username}?max=${max}&rated=${rated}&perfType${perfType}&pgnInJson=true`;
+
+  if (token) {
+    url = url + `&token=${token}`;
+  }
 
   const response = await fetch(url, {
     headers: {Accept: 'application/x-ndjson'},
