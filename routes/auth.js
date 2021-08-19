@@ -1,4 +1,3 @@
-const session = require('express-session');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 
@@ -7,7 +6,6 @@ const {Router} = express;
 const router = Router();
 
 // const clientId = 'example-backend';
-// app.use(session({resave: true, secret: 'SECRET', saveUninitialized: true}));
 
 // LOGIN
 const base64URLEncode = str => {

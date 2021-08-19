@@ -2,6 +2,7 @@ const queries = require('../controllers/dbController.js');
 const fetch = require('node-fetch');
 const ndjson = require('ndjson');
 const {Router} = require('express');
+const AppError =  require('../utils/appError')
 const router = Router();
 
 router.get('/games', async function (req, res) {
@@ -56,7 +57,7 @@ router.get('/games', async function (req, res) {
       res.send({status: 200});
     })
     .on('error', err => {
-      console.log(err);
+      console.log(new AppError(err));
     });
 });
 
