@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/games', async function (req, res) {
   const username = req.query.username.toLowerCase();
+  // Switch to new URL Search Params ?
   const {
     max = '100',
     token,

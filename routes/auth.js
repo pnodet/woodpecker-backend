@@ -1,29 +1,13 @@
-const {dotenv} = require('dotenv');
-const {Router} = require('express');
-const router = Router();
-
-router.get('/login', async (_req, _res) => {});
-router.get('/callback', async (_req, _res, _next) => {});
-router.get('/logout', async (_req, _res) => {});
-
-module.exports = router;
-
-/** *** *** *** *** *** *** *** *** *** *** *** ***
-
-const express = require('express');
 const session = require('express-session');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 
-const app = express();
-const port = 3000;
-const clientId = 'example-backend';
+const express = require('express');
+const {Router} = express;
+const router = Router();
 
-app.use(session({resave: true, secret: 'SECRET', saveUninitialized: true}));
-
-app.get('/', (req, res) => {
-  res.send('<a href="/login">Login</a>');
-});
+// const clientId = 'example-backend';
+// app.use(session({resave: true, secret: 'SECRET', saveUninitialized: true}));
 
 // LOGIN
 const base64URLEncode = str => {
@@ -38,7 +22,7 @@ const sha256 = buffer => crypto.createHash('sha256').update(buffer).digest();
 const createVerifier = () => base64URLEncode(crypto.randomBytes(32));
 const createChallenge = verifier => base64URLEncode(sha256(verifier));
 
-app.get('/login', async (req, res) => {
+router.get('/login', async (req, res) => {
   const url = req.protocol + '://' + req.get('host') + req.baseUrl;
   const verifier = createVerifier();
   const challenge = createChallenge(verifier);
@@ -77,7 +61,7 @@ const getLichessUser = async accessToken =>
     },
   }).then(res => res.json());
 
-app.get('/callback', async (req, res) => {
+router.get('/callback', async (req, res) => {
   const url = req.protocol + '://' + req.get('host') + req.baseUrl;
   const verifier = req.session.codeVerifier;
   const lichessToken = await getLichessToken(req.query.code, verifier, url);
@@ -91,6 +75,4 @@ app.get('/callback', async (req, res) => {
   res.send(`Logged in as ${lichessUser.username}`);
 });
 
-app.listen(port);
-
-*/
+module.exports = router;
