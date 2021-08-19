@@ -1,8 +1,9 @@
+const crypto = require('crypto');
 const fetch = require('node-fetch');
 const express = require('express');
 const {Router} = express;
 const router = Router();
-const config = require('../config')
+const config = require('../config');
 
 const clientId = config.auth.LICHESS_CLIENT_ID;
 
@@ -62,7 +63,7 @@ router.get('/callback', async (req, res) => {
   const url = req.protocol + '://' + req.get('host') + req.baseUrl;
   const verifier = req.session.codeVerifier;
   const lichessToken = await getLichessToken(req.query.code, verifier, url);
-
+  
   if (!lichessToken.access_token) {
     res.send('Failed getting token');
     return;
