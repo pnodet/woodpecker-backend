@@ -1,76 +1,52 @@
-const crypto = require('crypto');
+const {Router} = require('express');
+const oauth = require('simple-oauth2');
 const fetch = require('node-fetch');
+const config = require('../config.js');
 
-const express = require('express');
-const {Router} = express;
 const router = Router();
 
-// const clientId = 'example-backend';
-
-// LOGIN
-const base64URLEncode = str => {
-  return str
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
-};
-
-const sha256 = buffer => crypto.createHash('sha256').update(buffer).digest();
-const createVerifier = () => base64URLEncode(crypto.randomBytes(32));
-const createChallenge = verifier => base64URLEncode(sha256(verifier));
-
-router.get('/login', async (req, res) => {
-  const url = req.protocol + '://' + req.get('host') + req.baseUrl;
-  const verifier = createVerifier();
-  const challenge = createChallenge(verifier);
-  req.session.codeVerifier = verifier;
-  res.redirect(
-    'https://lichess.org/oauth?' +
-      new URLSearchParams({
-        response_type: 'code',
-        client_id: clientId,
-        redirect_uri: `${url}/callback`,
-        scope: 'preference:read',
-        code_challenge_method: 'S256',
-        code_challenge: challenge,
-      })
-  );
+/* --- Fill in your app config here --- */
+const client = new oauth.AuthorizationCode({
+  client: {
+    id: config.auth.LICHESS_CLIENT_ID,
+    secret: config.auth.LICHESS_CLIENT_SECRET,
+  },
+  auth: {
+    tokenHost: 'https://oauth.lichess.org',
+    authorizePath: '/oauth/authorize',
+    tokenPath: '/oauth',
+  },
+  http: {
+    json: true,
+  },
 });
 
-// CALLBACK
-const getLichessToken = async (authCode, verifier, url) =>
-  await fetch('https://lichess.org/api/token', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      grant_type: 'authorization_code',
-      redirect_uri: `${url}/callback`,
-      client_id: clientId,
-      code: authCode,
-      code_verifier: verifier,
-    }),
-  }).then(res => res.json());
+const redirectUri = `http://api.chesspecker.com/auth/callback`;
+const authorizationUri = client.authorizeURL({
+  redirect_uri: redirectUri,
+  scope: ['preference:read'], // see https://lichess.org/api#section/Introduction/Rate-limiting
+  state: Math.random().toString(36).substring(2),
+});
 
-const getLichessUser = async accessToken =>
-  await fetch('https://lichess.org/api/account', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  }).then(res => res.json());
+router.get('/', (_, res) => {
+  res.redirect(authorizationUri);
+});
 
 router.get('/callback', async (req, res) => {
-  const url = req.protocol + '://' + req.get('host') + req.baseUrl;
-  const verifier = req.session.codeVerifier;
-  const lichessToken = await getLichessToken(req.query.code, verifier, url);
-
-  if (!lichessToken.access_token) {
-    res.send('Failed getting token');
-    return;
-  }
-
-  const lichessUser = await getLichessUser(lichessToken.access_token);
-  res.send(`Logged in as ${lichessUser.username}`);
+  const token = await client.getToken({
+    code: req.query.code,
+    redirect_uri: redirectUri,
+  });
+  const user = await fetch('https://lichess.org/api/account', {
+    headers: {
+      Authorization: `Bearer ${token.token.access_token}`,
+    },
+  }).then(res => res.json());
+  res.send(
+    `<h1>Success!</h1>Your lichess user info: <pre>${JSON.stringify(
+      user
+    )}</pre>`
+  );
 });
 
 module.exports = router;

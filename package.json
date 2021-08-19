@@ -20,6 +20,7 @@
     "mongodb": "^4.1.0",
     "mongoose": "^5.13.7",
     "ndjson": "^2.0.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "simple-oauth2": "^4.2.0"
   }
 }
