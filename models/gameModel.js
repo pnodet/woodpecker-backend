@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
-const gameSchema = new Schema({
+const gameDefinition = new Schema({
   game_id: {
     type: Number,
     unique: true,
@@ -19,4 +19,11 @@ const gameSchema = new Schema({
   timestamps: true,
 });
 
-module.exports = mongoose.model('Games', gameSchema);
+let GameSchema = new mongoose.Schema(gameDefinition);
+let Game = mongoose.model('Game', GameSchema);
+
+module.exports = {
+  definition: gameDefinition,
+  schema: GameSchema,
+  model: Game,
+};
