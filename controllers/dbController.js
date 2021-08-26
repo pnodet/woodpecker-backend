@@ -2,6 +2,7 @@ const mongo = require('mongodb');
 const config = require('../config.js');
 
 const url = config.db.url;
+const databaseName = config.db.name;
 
 const createDB = async () => {
   const client = new mongo.MongoClient(url, {
@@ -19,16 +20,16 @@ const createDB = async () => {
   return true;
 };
 
- const createCollection = async collec => {
+const createCollection = async collectionName => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
   try {
     await client.connect();
-    const database = client.db('woodpecker-db');
-    database.createCollection(collec);
-    console.log('Collection ' + collec + ' created!');
+    const database = client.db(databaseName);
+    database.createCollection(collectionName);
+    console.log('Collection ' + collectionName + ' created!');
   } catch (err) {
     console.error(err);
   } finally {
@@ -37,15 +38,15 @@ const createDB = async () => {
   return true;
 };
 
- const insertOne = async (doc, collec) => {
+const insertOne = async (doc, collectionName) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
   try {
     await client.connect();
-    const database = client.db('woodpecker-db');
-    const collection = database.collection(collec);
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
     const result = await collection.insertOne(doc);
     console.log(
       `${result.insertedCount} document was inserted with the _id: ${result.insertedId}`
@@ -57,15 +58,15 @@ const createDB = async () => {
   }
 };
 
- const insertMany = async (arr, collec) => {
+const insertMany = async (arr, collectionName) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
   try {
     await client.connect();
-    const database = client.db('woodpecker-db');
-    const collection = database.collection(collec);
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
     const result = await collection.insertMany(arr);
     console.log(
       `${result.insertedCount} documents were inserted with the _id: ${result.insertedId}`
@@ -77,15 +78,93 @@ const createDB = async () => {
   }
 };
 
- const findOne = async (itemQuery, collec, options = {}) => {
+const updateOne = async (filter, doc, collectionName, options = {}) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
   try {
     await client.connect();
-    const database = client.db('woodpecker-db');
-    const collection = database.collection(collec);
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
+    const result = await collection.updateOne(filter, doc, options);
+    console.log(
+      `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`
+    );
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.close();
+  }
+};
+
+const updateMany = async (filter, doc, collectionName, options = {}) => {
+  const client = new mongo.MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
+    const result = await collection.updateMany(filter, doc, options);
+    console.log(`Updated ${result.modifiedCount} documents`);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.close();
+  }
+};
+
+const deleteOne = async (itemQuery, collectionName) => {
+  const client = new mongo.MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
+    const result = await collection.deleteOne(itemQuery);
+    if (result.deletedCount === 1) {
+      console.log('Successfully deleted one document.');
+    } else {
+      console.log('No documents matched the query. Deleted 0 documents.');
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.close();
+  }
+};
+
+const deleteMany = async (itemQuery, collectionName) => {
+  const client = new mongo.MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
+    const result = await collection.deleteMany(itemQuery);
+    console.log(`Deleted ${result.deletedCount} documents`);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.close();
+  }
+};
+
+const findOne = async (itemQuery, collectionName, options = {}) => {
+  const client = new mongo.MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
     const response = await collection.findOne(itemQuery, options);
     return response;
   } catch (err) {
@@ -95,15 +174,15 @@ const createDB = async () => {
   }
 };
 
- const find = async (itemQuery, collec, options = {}) => {
+const find = async (itemQuery, collectionName, options = {}) => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
   try {
     await client.connect();
-    const database = client.db('woodpecker-db');
-    const collection = database.collection(collec);
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
     const cursor = collection.find(itemQuery, options);
     if ((await cursor.count()) === 0) {
       console.log('Documents not found!');
@@ -117,7 +196,45 @@ const createDB = async () => {
   }
 };
 
- const empty = async () => {
+const count = async collectionName => {
+  const client = new mongo.MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
+    const result = collection.estimatedDocumentCount();
+    console.log(`Estimated number of documents in the collection: ${result}`);
+    return result;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.close();
+  }
+};
+
+const countQuery = async (query, collectionName) => {
+  const client = new mongo.MongoClient(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  try {
+    await client.connect();
+    const database = client.db(databaseName);
+    const collection = database.collection(collectionName);
+    const result = collection.countDocuments(query);
+    console.log(`Estimated number of documents with the filter: ${result}`);
+    return result;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.close();
+  }
+};
+
+const empty = async () => {
   const client = new mongo.MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -131,4 +248,18 @@ const createDB = async () => {
   }
 };
 
-module.exports = {createDB, createCollection, insertOne, insertMany, findOne, find, empty};
+module.exports = {
+  createDB,
+  createCollection,
+  insertOne,
+  insertMany,
+  deleteOne,
+  deleteMany,
+  updateOne,
+  updateMany,
+  findOne,
+  find,
+  count,
+  countQuery,
+  empty,
+};
