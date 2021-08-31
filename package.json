@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "xo --fix",
+    "test": "xo"
   },
   "keywords": [],
   "author": "Paul Nodet",
@@ -22,5 +23,18 @@
     "ndjson": "^2.0.0",
     "node-fetch": "^2.6.1",
     "simple-oauth2": "^4.2.0"
+  },
+  "devDependencies": {
+    "xo": "^0.44.0"
+  },
+  "xo": {
+    "singleQuote": true,
+    "prettier": true
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "jsxBracketSameLine": false
   }
 }
