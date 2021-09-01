@@ -4,7 +4,7 @@ import {db} from '../config.js';
 const url = db.url;
 const databaseName = db.name;
 
-const createDB = async () => {
+export const createDB = async () => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -21,7 +21,7 @@ const createDB = async () => {
 	return true;
 };
 
-const createCollection = async (collectionName) => {
+export const createCollection = async (collectionName) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -40,7 +40,7 @@ const createCollection = async (collectionName) => {
 	return true;
 };
 
-const insertOne = async (doc, collectionName) => {
+export const insertOne = async (doc, collectionName) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -60,7 +60,7 @@ const insertOne = async (doc, collectionName) => {
 	}
 };
 
-const insertMany = async (array, collectionName) => {
+export const insertMany = async (array, collectionName) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -80,7 +80,7 @@ const insertMany = async (array, collectionName) => {
 	}
 };
 
-const updateOne = async (filter, doc, collectionName, options = {}) => {
+export const updateOne = async (filter, doc, collectionName, options = {}) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -100,7 +100,7 @@ const updateOne = async (filter, doc, collectionName, options = {}) => {
 	}
 };
 
-const updateMany = async (filter, doc, collectionName, options = {}) => {
+export const updateMany = async (filter, doc, collectionName, options = {}) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -118,7 +118,7 @@ const updateMany = async (filter, doc, collectionName, options = {}) => {
 	}
 };
 
-const deleteOne = async (itemQuery, collectionName) => {
+export const deleteOne = async (itemQuery, collectionName) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -140,7 +140,7 @@ const deleteOne = async (itemQuery, collectionName) => {
 	}
 };
 
-const deleteMany = async (itemQuery, collectionName) => {
+export const deleteMany = async (itemQuery, collectionName) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -158,7 +158,7 @@ const deleteMany = async (itemQuery, collectionName) => {
 	}
 };
 
-const findOne = async (itemQuery, collectionName, options = {}) => {
+export const findOne = async (itemQuery, collectionName, options = {}) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -176,7 +176,7 @@ const findOne = async (itemQuery, collectionName, options = {}) => {
 	}
 };
 
-const find = async (itemQuery, collectionName, options = {}) => {
+export const find = async (itemQuery, collectionName, options = {}) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -185,7 +185,7 @@ const find = async (itemQuery, collectionName, options = {}) => {
 		await client.connect();
 		const database = client.db(databaseName);
 		const collection = database.collection(collectionName);
-		const cursor = collection.find(itemQuery, options);
+		const cursor = collection.find(toString(itemQuery), options);
 		if ((await cursor.count()) === 0) {
 			console.log('Documents not found!');
 		}
@@ -199,7 +199,7 @@ const find = async (itemQuery, collectionName, options = {}) => {
 	}
 };
 
-const count = async (collectionName) => {
+export const count = async (collectionName) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -218,7 +218,7 @@ const count = async (collectionName) => {
 	}
 };
 
-const countQuery = async (query, collectionName) => {
+export const countQuery = async (query, collectionName) => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -237,7 +237,7 @@ const countQuery = async (query, collectionName) => {
 	}
 };
 
-const empty = async () => {
+export const empty = async () => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -249,20 +249,4 @@ const empty = async () => {
 	} finally {
 		await client.close();
 	}
-};
-
-export default {
-	createDB,
-	createCollection,
-	insertOne,
-	insertMany,
-	deleteOne,
-	deleteMany,
-	updateOne,
-	updateMany,
-	findOne,
-	find,
-	count,
-	countQuery,
-	empty,
 };

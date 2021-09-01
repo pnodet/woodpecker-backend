@@ -17,8 +17,10 @@ const puzzleDefinition = new Schema({
 const PuzzleSchema = new mongoose.Schema(puzzleDefinition);
 const Puzzle = mongoose.model('Puzzle', PuzzleSchema);
 
-export default {
+puzzleModel = {
 	definition: puzzleDefinition,
 	schema: PuzzleSchema,
 	model: Puzzle,
 };
+
+export default puzzleModel;

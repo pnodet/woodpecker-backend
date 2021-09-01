@@ -19,8 +19,10 @@ const setDefinition = new Schema({
 const setSchema = new mongoose.Schema(setDefinition);
 const set = mongoose.model('set', setSchema);
 
-export default {
+setModel = {
 	definition: setDefinition,
 	schema: setSchema,
 	model: set,
 };
+
+export default setModel;

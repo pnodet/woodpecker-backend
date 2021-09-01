@@ -13,8 +13,10 @@ const userDefinition = new Schema({
 const userSchema = new mongoose.Schema(userDefinition);
 const user = mongoose.model('user', userSchema);
 
-export default {
+userModel = {
 	definition: userDefinition,
 	schema: userSchema,
 	model: user,
 };
+
+export default userModel;

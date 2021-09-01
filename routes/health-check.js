@@ -1,3 +1,4 @@
+import process from 'node:process';
 import {Router} from 'express';
 
 /**
@@ -20,9 +21,9 @@ router.get('/', async (_request, response) => {
 		response.status(503).send();
 	}
 });
-router.get('/database', (_request, res) => {
+router.get('/database', (_request, response) => {
 	let result;
-	result === true ? res.send({status: 200}) : res.send({status: 500});
+	result === true ? response.send({status: 200}) : response.send({status: 500});
 });
 
 export default router;
