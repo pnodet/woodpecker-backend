@@ -15,7 +15,7 @@ const gameDefinition = new Schema({
 		required: true,
 	},
 	color: String,
-	pgn,
+	pgn: String,
 	analyzed: Boolean,
 	timestamps: true,
 });

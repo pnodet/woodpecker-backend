@@ -1,12 +1,14 @@
-const fetch = require('node-fetch');
-const ndjson = require('ndjson');
-const {Router} = require('express');
-const queries = require('../controllers/db-controller.js').default;
-const AppError = require('../utils/app-error').default;
+/* eslint-disable no-warning-comments */
+import fetch from 'node-fetch';
+import ndjson from 'ndjson';
+import {Router} from 'express';
 
-const router = Router();
+import queries from '../controllers/db-controller.js';
+import AppError from '../utils/app-error.js';
 
-router.get('/games', async (request, res) => {
+const router = new Router();
+
+router.get('/games', async (request, response) => {
 	const username = request.query.username.toLowerCase();
 	// Switch to new URL Search Params ?
 	const {
@@ -22,19 +24,19 @@ router.get('/games', async (request, res) => {
 		url += `&token=${token}`;
 	}
 
-	const response = await fetch(url, {
+	const result = await fetch(url, {
 		headers: {Accept: 'application/x-ndjson'},
 	});
 
-	response.body
+	result.body
 		.pipe(ndjson.parse())
 		.on('data', async (item) => {
 			const isInDB = await queries.findOne({game_id: item.id}, 'games');
 			if (isInDB === null) {
 				let color;
-				if (item.players.white.user.name.toLowerCase() == username)
+				if (item.players.white.user.name.toLowerCase() === username)
 					color = 'white';
-				if (item.players.black.user.name.toLowerCase() == username)
+				if (item.players.black.user.name.toLowerCase() === username)
 					color = 'black';
 
 				// FIXME: check player color
@@ -55,7 +57,7 @@ router.get('/games', async (request, res) => {
 			console.log('pause');
 		})
 		.on('end', () => {
-			res.send({status: 200});
+			response.send({status: 200});
 		})
 		.on('error', (error) => {
 			console.log(new AppError(error));

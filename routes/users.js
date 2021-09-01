@@ -9,7 +9,7 @@ router.post('/', async (request, res) => {
 	if (testUser) res.status(400).send('Email already used');
 
 	// Else
-	user = new User();
+	const user = new User();
 });
 
 export default router;

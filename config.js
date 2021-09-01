@@ -1,6 +1,6 @@
-const dotenv = require('dotenv');
+import {config as _config} from 'dotenv';
 
-dotenv.config();
+_config();
 const env = process.env;
 
 const config = {
@@ -14,4 +14,4 @@ const config = {
 	},
 };
 
-module.exports = config;
+export default config;

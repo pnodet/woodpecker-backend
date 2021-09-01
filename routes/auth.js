@@ -1,10 +1,10 @@
+/* eslint-disable camelcase */
 import {createHash, randomBytes} from 'node:crypto';
 import fetch from 'node-fetch';
-import express from 'express';
+import {Router} from 'express';
 import {auth} from '../config.js';
 
-const {Router} = express;
-const router = Router();
+const router = new Router();
 
 const clientId = auth.LICHESS_CLIENT_ID;
 
@@ -20,12 +20,12 @@ const sha256 = (buffer) => createHash('sha256').update(buffer).digest();
 const createVerifier = () => base64URLEncode(randomBytes(32));
 const createChallenge = (verifier) => base64URLEncode(sha256(verifier));
 
-router.get('/login', async (request, res) => {
+router.get('/login', async (request, response) => {
 	const url = request.protocol + '://' + request.get('host') + request.baseUrl;
 	const verifier = createVerifier();
 	const challenge = createChallenge(verifier);
 	request.session.codeVerifier = verifier;
-	res.redirect(
+	response.redirect(
 		'https://lichess.org/oauth?' +
 			new URLSearchParams({
 				response_type: 'code',
@@ -40,7 +40,7 @@ router.get('/login', async (request, res) => {
 
 // CALLBACK
 const getLichessToken = async (authCode, verifier, url) =>
-	await fetch('https://lichess.org/api/token', {
+	fetch('https://lichess.org/api/token', {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -50,27 +50,27 @@ const getLichessToken = async (authCode, verifier, url) =>
 			code: authCode,
 			code_verifier: verifier,
 		}),
-	}).then((res) => res.json());
+	}).then((response) => response.json());
 
 const getLichessUser = async (accessToken) =>
-	await fetch('https://lichess.org/api/account', {
+	fetch('https://lichess.org/api/account', {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
-	}).then((res) => res.json());
+	}).then((response) => response.json());
 
-router.get('/callback', async (request, res) => {
+router.get('/callback', async (request, response) => {
 	const url = request.protocol + '://' + request.get('host') + request.baseUrl;
 	const verifier = request.session.codeVerifier;
 	const lichessToken = await getLichessToken(request.query.code, verifier, url);
 
 	if (!lichessToken.access_token) {
-		res.send('Failed getting token');
+		response.send('Failed getting token');
 		return;
 	}
 
 	const lichessUser = await getLichessUser(lichessToken.access_token);
-	res.send(`Logged in as ${lichessUser.username}`);
+	response.send(`Logged in as ${lichessUser.username}`);
 });
 
 export default router;
