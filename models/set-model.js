@@ -19,7 +19,7 @@ const setDefinition = new Schema({
 const setSchema = new mongoose.Schema(setDefinition);
 const set = mongoose.model('set', setSchema);
 
-setModel = {
+const setModel = {
 	definition: setDefinition,
 	schema: setSchema,
 	model: set,

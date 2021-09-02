@@ -23,7 +23,7 @@ const gameDefinition = new Schema({
 const GameSchema = new mongoose.Schema(gameDefinition);
 const Game = mongoose.model('Game', GameSchema);
 
-gameModel = {
+const gameModel = {
 	definition: gameDefinition,
 	schema: GameSchema,
 	model: Game,

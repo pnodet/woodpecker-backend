@@ -17,7 +17,7 @@ const puzzleDefinition = new Schema({
 const PuzzleSchema = new mongoose.Schema(puzzleDefinition);
 const Puzzle = mongoose.model('Puzzle', PuzzleSchema);
 
-puzzleModel = {
+const puzzleModel = {
 	definition: puzzleDefinition,
 	schema: PuzzleSchema,
 	model: Puzzle,

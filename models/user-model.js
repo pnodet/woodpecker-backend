@@ -13,7 +13,7 @@ const userDefinition = new Schema({
 const userSchema = new mongoose.Schema(userDefinition);
 const user = mongoose.model('user', userSchema);
 
-userModel = {
+const userModel = {
 	definition: userDefinition,
 	schema: userSchema,
 	model: user,
