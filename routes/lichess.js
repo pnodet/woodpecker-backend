@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import ndjson from 'ndjson';
 import {Router} from 'express';
 
-import queries from '../controllers/db-controller.js';
+import {findOne, insertOne} from '../controllers/db-controller.js';
 import AppError from '../utils/app-error.js';
 
 const router = new Router();
@@ -31,7 +31,7 @@ router.get('/games', async (request, response) => {
 	result.body
 		.pipe(ndjson.parse())
 		.on('data', async (item) => {
-			const isInDB = await queries.findOne({game_id: item.id}, 'games');
+			const isInDB = await findOne({game_id: item.id}, 'games');
 			if (isInDB === null) {
 				let color;
 				if (item.players.white.user.name.toLowerCase() === username)
@@ -48,7 +48,7 @@ router.get('/games', async (request, response) => {
 					analyzed: false,
 				};
 
-				queries.insertOne(gameObject, 'games');
+				insertOne(gameObject, 'games');
 			} else {
 				console.log('Game : ' + item.id + ' is in db');
 			}

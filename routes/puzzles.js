@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import queries from '../controllers/db-controller.js';
+import {count} from '../controllers/db-controller.js';
 
 const router = new Router();
 
