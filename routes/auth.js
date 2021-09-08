@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {createHash, randomBytes} from 'node:crypto';
-import fetch from 'node-fetch';
+import got from 'got';
 import {Router} from 'express';
 import {auth} from '../config.js';
 
@@ -40,24 +40,25 @@ router.get('/login', async (request, response) => {
 
 // CALLBACK
 const getLichessToken = async (authCode, verifier, url) =>
-	fetch('https://lichess.org/api/token', {
-		method: 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({
-			grant_type: 'authorization_code',
-			redirect_uri: `${url}/callback`,
-			client_id: clientId,
-			code: authCode,
-			code_verifier: verifier,
-		}),
-	}).then((response) => response.json());
+	got
+		.post('https://lichess.org/api/token', {
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({
+				grant_type: 'authorization_code',
+				redirect_uri: `${url}/callback`,
+				client_id: clientId,
+				code: authCode,
+				code_verifier: verifier,
+			}),
+		})
+		.json();
 
 const getLichessUser = async (accessToken) =>
-	fetch('https://lichess.org/api/account', {
+	got('https://lichess.org/api/account', {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
-	}).then((response) => response.json());
+	}).json();
 
 router.get('/callback', async (request, response) => {
 	const url = request.protocol + '://' + request.get('host') + request.baseUrl;

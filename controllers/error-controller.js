@@ -1,5 +1,7 @@
-// Express automatically knows that this entire function is an error handling middleware by specifying 4 parameters
-
+/**
+ * Express automatically knows that this entire function is
+ * an error handling middleware by specifying 4 parameters
+ */
 const errorController = (error, _request, response, _next) => {
 	error.statusCode = error.statusCode || 500;
 	error.status = error.status || 'error';

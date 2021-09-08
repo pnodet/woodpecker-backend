@@ -1,5 +1,5 @@
 /* eslint-disable no-warning-comments, camelcase */
-import fetch from 'node-fetch';
+import got from 'got';
 import ndjson from 'ndjson';
 import {Router} from 'express';
 
@@ -24,11 +24,11 @@ router.get('/games', async (request, response) => {
 		url += `&token=${token}`;
 	}
 
-	const result = await fetch(url, {
+	const stream = got.stream(url, {
 		headers: {Accept: 'application/x-ndjson'},
 	});
 
-	result.body
+	stream
 		.pipe(ndjson.parse())
 		.on('data', async (item) => {
 			const isInDB = await findOne({game_id: item.id}, 'games');
