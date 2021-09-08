@@ -1,15 +1,14 @@
 import {Router} from 'express';
-import {count} from '../controllers/db-controller.js';
 
 const router = new Router();
 
 class Puzzle {
-	constructor(){
-		this.puzzles = ['_id-01', '_id-02', '_id-03'],
-		this.numberOfPuzzle;
-		this.tries = 3;
-		this.successRate;
-		this.bestTime;
+	constructor(length) {
+		this.puzzles = ['_id-01', '_id-02', '_id-03'];
+		this.numberOfPuzzle = length;
+		this.tries = 0;
+		this.successRate = 0;
+		this.bestTime = 0;
 	}
 }
 
@@ -26,7 +25,7 @@ router.get('/set', async (_request, _response) => {
 	// if it is not possible, add new games from the user to the db then analyze
 
 	// create a object ? or an array ?
-	const puzzle1 = new Puzzle;
+	const puzzle1 = new Puzzle();
 	console.log(puzzle1);
 
 	// Save it in DB

@@ -1,15 +1,18 @@
+/* eslint-disable no-warning-comments */
 /** NODE_MODULES */
+import {env} from 'node:process';
 import express, {json, urlencoded} from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import session from 'express-session';
 
+/** ROUTES */
 import puzzle from './routes/puzzles.js';
 import auth from './routes/auth.js';
 import lichess from './routes/lichess.js';
 
 /** APP */
-const port = 5669;
+const port = env.PORT || 5669;
 const app = express();
 app.use(json());
 app.use(urlencoded({extended: true}));

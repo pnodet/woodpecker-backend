@@ -1,4 +1,4 @@
-/* eslint-disable no-warning-comments */
+/* eslint-disable no-warning-comments, camelcase */
 import fetch from 'node-fetch';
 import ndjson from 'ndjson';
 import {Router} from 'express';

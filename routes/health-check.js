@@ -1,11 +1,6 @@
 import process from 'node:process';
 import {Router} from 'express';
 
-/**
- * TODO: add further things to check (e.g. connecting to dababase)
- import queries from '../controllers/db-controller.js';
- */
-
 const router = new Router();
 
 router.get('/', async (_request, response) => {
@@ -21,9 +16,14 @@ router.get('/', async (_request, response) => {
 		response.status(503).send();
 	}
 });
+
+/**
+ * TODO: add further things to check (e.g. connecting to dababase)
+import queries from '../controllers/db-controller.js';
 router.get('/database', (_request, response) => {
 	let result;
 	result === true ? response.send({status: 200}) : response.send({status: 500});
 });
+*/
 
 export default router;
