@@ -10,7 +10,7 @@ class NotFound extends error {
 	}
 }
 
-export const errorLogger = (error, _request, response, next) => {
+export const errorLogger = (error, _request, _response, next) => {
 	console.error('\x1b[31m', error);
 	next(error);
 };

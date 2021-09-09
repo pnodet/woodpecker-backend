@@ -11,7 +11,7 @@ import puzzle from './routes/puzzles.js';
 import auth from './routes/auth.js';
 import lichess from './routes/lichess.js';
 
-import errorController from './controllers/error-controller.js';
+import errorController, {errorLogger} from './controllers/error-controller.js';
 
 /** APP */
 const port = env.PORT || 5669;
@@ -25,6 +25,7 @@ app.use(session({resave: true, secret: 'SECRET', saveUninitialized: true}));
 app.use('/puzzle', puzzle);
 app.use('/lichess', lichess);
 app.use('/auth', auth);
+app.use(errorLogger());
 app.use(errorController());
 
 /** START SERVER */
