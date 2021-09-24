@@ -21,7 +21,7 @@ export const createDB = async () => {
 	return true;
 };
 
-export const createCollection = async (collectionName) => {
+export const createCollection = async collectionName => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -199,7 +199,7 @@ export const find = async (itemQuery, collectionName, options = {}) => {
 	}
 };
 
-export const count = async (collectionName) => {
+export const count = async collectionName => {
 	const client = new MongoClient(url, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,

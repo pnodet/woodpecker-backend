@@ -30,7 +30,7 @@ router.get('/games', async (request, response) => {
 
 	result.body
 		.pipe(ndjson.parse())
-		.on('data', async (item) => {
+		.on('data', async item => {
 			const isInDB = await findOne({game_id: item.id}, 'games');
 			if (isInDB === null) {
 				let color;
@@ -59,7 +59,7 @@ router.get('/games', async (request, response) => {
 		.on('end', () => {
 			response.send({status: 200});
 		})
-		.on('error', (error) => {
+		.on('error', error => {
 			console.log(new AppError(error));
 		});
 });

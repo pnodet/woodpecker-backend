@@ -2,16 +2,8 @@
  * Express automatically knows that this entire function is
  * an error handling middleware by specifying 4 parameters
  */
-
-class NotFound extends error {
-	constructor() {
-		super();
-		this.name = this.constructor.name;
-	}
-}
-
 export const errorLogger = (error, _request, _response, next) => {
-	console.error('\x1b[31m', error);
+	console.error('\u001B[31m', error);
 	next(error);
 };
 

@@ -9,16 +9,16 @@ const router = new Router();
 const clientId = auth.LICHESS_CLIENT_ID;
 
 // LOGIN
-const base64URLEncode = (string_) =>
+const base64URLEncode = string_ =>
 	string_
 		.toString('base64')
 		.replace(/\+/g, '-')
 		.replace(/\//g, '_')
 		.replace(/=/g, '');
 
-const sha256 = (buffer) => createHash('sha256').update(buffer).digest();
+const sha256 = buffer => createHash('sha256').update(buffer).digest();
 const createVerifier = () => base64URLEncode(randomBytes(32));
-const createChallenge = (verifier) => base64URLEncode(sha256(verifier));
+const createChallenge = verifier => base64URLEncode(sha256(verifier));
 
 router.get('/login', async (request, response) => {
 	const url = request.protocol + '://' + request.get('host') + request.baseUrl;
@@ -50,14 +50,14 @@ const getLichessToken = async (authCode, verifier, url) =>
 			code: authCode,
 			code_verifier: verifier,
 		}),
-	}).then((response) => response.json());
+	}).then(response => response.json());
 
-const getLichessUser = async (accessToken) =>
+const getLichessUser = async accessToken =>
 	fetch('https://lichess.org/api/account', {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
 		},
-	}).then((response) => response.json());
+	}).then(response => response.json());
 
 router.get('/callback', async (request, response) => {
 	const url = request.protocol + '://' + request.get('host') + request.baseUrl;
