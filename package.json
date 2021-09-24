@@ -25,16 +25,11 @@
     "simple-oauth2": "^4.2.0"
   },
   "devDependencies": {
+    "prettier-config-xo": "^2.0.0",
     "xo": "^0.44.0"
   },
+  "prettier": "prettier-config-xo",
   "xo": {
-    "singleQuote": true,
     "prettier": true
-  },
-  "prettier": {
-    "trailingComma": "all",
-    "singleQuote": true,
-    "bracketSpacing": false,
-    "jsxBracketSameLine": false
   }
 }

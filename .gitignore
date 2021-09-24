@@ -1,6 +1,5 @@
 .DS_Store
 private/
-package-lock.json
 
 *.py[cd]
 */*.py[cd]
